@@ -171,17 +171,25 @@ classifier.fit(x_train, y_train, batch_size=10, nb_epoch=100)
 
 
 
+##Part3 - Making the predictions and evaluating the model
+# predicting the test set results 
+y_pred = classifier.predict(x_test)
 
 
+#we want to figure out if the accuracy obtained on the test set is as good as
+#training set, we do that with confusion matrix
+#Note: the predict method returns the probabilities, in order to use the confusion-
+#matrix we dont need the probability, we need True or False
+#we need to choose a threshold to predict if the result is 1 or 0
+#threshold = 0.5
 
+y_pred = (y_pred > 0.5)
 
-
-
-#Creat our classifier right here
-#fitting logistic regression to the training set
-
-
+#making confusion matrix
 
 from sklearn.metrics import confusion_matrix
 cm = confusion_matrix(y_test, y_pred)
+
+#we get accuracy of 86%, maybe if we do tunning we get better accuracies
+
 
