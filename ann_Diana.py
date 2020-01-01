@@ -192,4 +192,31 @@ cm = confusion_matrix(y_test, y_pred)
 
 #we get accuracy of 86%, maybe if we do tunning we get better accuracies
 
+#predicting a single new observation
+# =============================================================================
+#  Use our ANN model to predict if the customer with the following informations will leave the bank: 
+# 
+#     Geography: France
+#     Credit Score: 600
+#     Gender: Male
+#     Age: 40 years old
+#     Tenure: 3 years
+#     Balance: $60000
+#     Number of Products: 2
+#     Does this customer have a credit card ? Yes
+#     Is this customer an Active Member: Yes
+#     Estimated Salary: $50000
+# 
+# So should we say goodbye to that customer ?
+# 
+# =============================================================================
+
+# we need to use y_pred: our inputs should be in 2-D shape array np.array([[]])
+# put the information as the same order of feature vectors, and it should be scaled
+#same scale as training set, we take the same sc object because iit was fitted into
+#training set, we need to pply iit to the whole array
+
+
+new_prediction = classifier.predict(sc_x.transform(np.array([[0, 0, 600, 1, 40, 3, 60000, 2, 1, 1, 50000]])))
+new_prediction = (new_prediction>0.5)
 
