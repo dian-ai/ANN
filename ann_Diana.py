@@ -220,3 +220,53 @@ cm = confusion_matrix(y_test, y_pred)
 new_prediction = classifier.predict(sc_x.transform(np.array([[0, 0, 600, 1, 40, 3, 60000, 2, 1, 1, 50000]])))
 new_prediction = (new_prediction>0.5)
 
+
+
+#part 4 - Evaluating ANN k-fold cross validation: fixes variance of accuracy that we obtained 
+#in previous parts, it will fix it by splitting the training set into 10 folds(k=10)
+# we train our model on 9 folds and test on last fold>> gives a better 
+#evaluation of models.
+# for that we need to just do the data preprocessing and then this part:
+# so far we built a model with keras and k-fold validation is from scikit-learn
+# we have to combine them together: perfect module is keras wrapper, that will wrap 
+# k-fold into keras model, used by keros classifier
+
+
+## evaluating ANN:
+#keras wrapper
+
+from keras.wrappers.scikit_learn import KerasClassifier
+from sklearn.model_selection import cross_val_score
+
+#we are ready to start implementing K-fold cross validation inside keras
+# to use KerasClassifier we should define a function (its an argument)
+#this function build the architecture of ANN that we have built on part 2 and 3
+
+def build_classifier():
+    classifier = Sequential()
+    classifier.add(Dense(6, kernel_initializer='uniform', activation='relu', input_dim= 11))
+    classifier.add(Dense(6, kernel_initializer='uniform', activation='relu'))
+    classifier.add(Dense(1, kernel_initializer='uniform', activation='sigmoid'))
+    classifier.compile(optimizer = 'adam', loss = 'binary_crossentropy' , metrics = ['accuracy'])
+    return classifier
+
+#now we wrapp the  whole thing, we should build a global classifier now
+# this classifier wont be trained on the whole training set, but on 
+# 10 different training fold through k-fold cross validation
+
+classifier = KerasClassifier(build_fn= build_classifier, batch_size=10 , nb_epoch=100)
+
+#now we use k-fold cross validation
+# returning the relevent measure of the accuracy of ANN on test set
+# 10 accuracies of the 10 test folds that occur
+#X is the training set from which we buil our 10 train test folds
+#cv is the number of folds
+
+accuracies = cross_val_score(estimator = classifier, X = x_train, y = y_train, cv=10, n_jobs=-1)
+
+
+    
+
+
+    
+    
